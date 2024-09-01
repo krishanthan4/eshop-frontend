@@ -1,5 +1,5 @@
 
-export default function footer() {
+export default function Footer() {
   return (
     <div aria-labelledby="footer-heading" class="bg-[#1d1e20]" >
     <div class="py-5 text-center">
