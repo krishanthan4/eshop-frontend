@@ -1,9 +1,11 @@
 import { ReactNode } from "react"; 
 import Image from "next/image";
+import Nav from "./components/(Nav)/Nav";
 
 export default function Home() {
   return (
     <div> <main>
+      <Nav/>
     {/* <!-- Hero --> */}
     <div className="flex flex-col border-b border-gray-200 lg:border-0">
 
@@ -157,29 +159,29 @@ export default function Home() {
                 <div className="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
                   <div className="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
                     <div className="flex-shrink-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product2.jpeg" alt=""/>
+                    <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product2.jpeg"} placeholder="blur" blurDataURL="data:..." width={500} height={500} alt=""/>
                     </div>
 
                     <div className="mt-6 flex-shrink-0 sm:mt-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product3.jpeg" alt=""/>
+                    <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product3.jpeg"} placeholder="blur" blurDataURL="data:..." width={500} height={500} alt=""/>
                     </div>
                   </div>
                   <div className="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
                     <div className="flex-shrink-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product4.jpeg" alt=""/>
+                    <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product4.jpeg"} placeholder="blur" blurDataURL="data:..." width={500} height={500} alt=""/>
                     </div>
 
                     <div className="mt-6 flex-shrink-0 sm:mt-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product11.jpeg" alt=""/>
+                    <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product11.jpeg"} placeholder="blur" blurDataURL="data:..." width={500} height={500} alt=""/>
                     </div>
                   </div>
                   <div className="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
                     <div className="flex-shrink-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product6.jpeg" alt=""/>
+                      <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product3.jpeg"} width={500} height={500} placeholder="blur" blurDataURL="data:..." alt=""/>
                     </div>
 
                     <div className="mt-6 flex-shrink-0 sm:mt-0">
-                      <img className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/product_images/product7.jpeg" alt=""/>
+                    <Image className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src={"/images/product_images/product7.jpeg"} width={500} height={500} placeholder="blur" blurDataURL="data:..." alt=""/>
                     </div>
                   </div>
                 </div>

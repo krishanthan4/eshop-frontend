@@ -11,7 +11,6 @@ export default function page() {
     }
 
    const sendUserDetails= async ()=>{
-    
     try{
    const response = await fetch('/api/Signin', {
         method: "POST",

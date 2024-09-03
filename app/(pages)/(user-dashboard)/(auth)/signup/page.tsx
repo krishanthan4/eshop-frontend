@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { json } from "stream/consumers";
 
 export default function page() {
   const [email, setEmail] = useState("");
@@ -29,7 +28,6 @@ export default function page() {
       .then((data) => {
         alert(data);
         // if(data.message=="success"){
-
 
         // }
       })
