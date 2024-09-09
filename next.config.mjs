@@ -17,8 +17,6 @@ const nextConfig = {
           {
             protocol: 'https',
             hostname: 'i.pinimg.com',
-            port: '',
-            pathname: '/my-bucket/**',
           },
         ],
       },

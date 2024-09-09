@@ -1,40 +1,58 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+
 
 export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retype_password, setRetype_password] = useState("");
-
+const router = useRouter();
   const userDetails = {
     email: email,
     password: password,
-    retype_password: retype_password,
   };
-
   const saveUserDetails = () => {
-    fetch("/api/Signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userDetails),
-    })
-      .then((response) => {
-        if(response.ok){
-          response.json();
-        }
+    // Assuming email, password, retype_password, and userDetails are state variables.
+    if (email === "") {
+      toast.error("Please enter an email.");
+    } else if (password === "") {
+      toast.error("Please enter a password.");
+    } else if (retype_password === "") {
+      toast.error("Please Enter the Retype Password.");
+    } else if (retype_password !== password) {
+      toast.error("Passwords does not match.");
+    } else {
+      fetch("/api/Signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userDetails), // Make sure userDetails is properly defined
       })
-      .then((data) => {
-        alert(data);
-        // if(data.message=="success"){
-
-        // }
-      })
-      .catch((e) => {
-        console.error(e.message);
-      });
+        .then((response) => {
+          if (response.ok) {
+            return response.json(); // Return the parsed JSON data
+          } else {
+            throw new Error("Failed to sign up."); // Throw an error if the response is not ok
+          }
+        })
+        .then((data) => {
+          if (data.success) {
+            toast.success(data.content); 
+router.push("/verifyUser");
+          } else {
+            toast.error("Sign-up failed: " + data.content);
+          }
+        })
+        .catch((e) => {
+          console.error(e.message); // Properly log the error
+          toast.error("An error occurred: " + e.message);
+        });
+    }
   };
+  
 
   return (
     <>

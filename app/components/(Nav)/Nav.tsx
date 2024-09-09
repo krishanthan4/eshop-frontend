@@ -4,6 +4,7 @@ import { useState } from "react";
 import MainSearchBar from "./MainSearchBar";
 import {nav_category_mobile,nav_flyout_calisthenics,nav_flyout_skateboarding,nav_flyout_weight} from "@/app/components/Objects";
 import NavFlyoutMenuComponent from "./NavFlyoutMenuComponent";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function Nav() {
   const [mobileMenuButtonStatus, setMobileMenuButtonStatus] = useState(true);
@@ -44,6 +45,7 @@ export default function Nav() {
   };
   const signOut = () => {};
 
+  const {isLoggedIn,login,logout} = useAuthStore();
  
   return (
     <div className="">
@@ -191,13 +193,10 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
               </div>
               <MainSearchBar />
               <div className="ml-auto flex items-center">
-                {/* <?php if (isset($_SESSION["user"]) && $_SESSION["user"]) {
-            $result = Database::search("SELECT * FROM profile_img WHERE user_email='" . $_SESSION["user"]["email"] . "'");
-            $path = $result->fetch_assoc();
-            $sellingHistoryNav_rs = Database::search("SELECT `user_email` FROM `product` WHERE `user_email`=?",[$_SESSION["user"]["email"]]);
-            if ($result->num_rows !== 0 && $path["path"] !== "resources/new_user.png") { ?> */}
-                {/* <!-- Account --> */}
-                <button
+                  {/* signed In drop down start */}
+{isLoggedIn ? (
+<>
+<button
                   id="dropdownUserAvatarButton"
                   data-dropdown-toggle="dropdownAvatar"
                   className=" text-sm bg-[#242529] rounded-full md:block hidden md:me-0 focus:ring-1 focus:ring-gray-300"
@@ -206,7 +205,7 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                   <img
                     draggable="false"
                     className=" border-2 border-gray-500 object-center object-cover w-10 h-10 rounded-full"
-                    src=""
+                    src="/images/new_user.png"
                     alt=""
                   />
                 </button>
@@ -358,7 +357,7 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                         <p className="block px-4 py-2 ">Contact Admin</p>
                       </li>
                     </Link>
-                    <button onClick={signOut} className="cursor-pointer">
+                    <button onClick={logout} className="cursor-pointer">
                       <li className="  flex items-center hover:bg-[#35353d] ">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -380,7 +379,7 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                     </button>
                   </ul>
                 </div>
-                {/* // <?php } else { ?> */}
+             {/* signed In drop down end */}
 
                 <button
                   id="dropdownUserAvatarButton"
@@ -507,7 +506,7 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                         <p className="block px-4 py-2 ">Contact Admin</p>
                       </li>
                     </Link>
-                    <button onClick={signOut} className="cursor-pointer">
+                    <button onClick={logout} className="cursor-pointer">
                       <li className="  flex items-center hover:bg-[#35353d] ">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -529,6 +528,15 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                     </button>
                   </ul>
                 </div>
+</>
+): (
+<p>
+<a href="signin">Signin</a> | <a href="/signup">Sign Up</a>
+</p>
+)}
+           
+
+                
                 {/* <?php }} else { ?> */}
                 {/* <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
               <Link href={"/signin"} className="text-sm font-medium  hover:text-white text-gray-300">Sign in</Link>

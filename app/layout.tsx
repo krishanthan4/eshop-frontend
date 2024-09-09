@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import LayoutWrapper from '@/app/components/LayoutWrapper' // Import the client component
+import { toast, Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,10 +17,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+ 
   return (
     <html lang="en" className="h-full">
       <body className="h-full bg-[#1d1e20] text-gray-200 overflow-x-hidden">
         <LayoutWrapper>
+    <Toaster richColors position="top-right"/>
+
           {children}
         </LayoutWrapper>
       </body>

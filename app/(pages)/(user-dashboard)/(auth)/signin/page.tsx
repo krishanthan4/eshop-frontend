@@ -1,13 +1,26 @@
 "use client";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import useAuthStore from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 export default function page() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [RememberMe, setRememberMe] = useState(false);
+  const { login } = useAuthStore();
+const router = useRouter();
+ 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('user_email');
+    const savedPassword = localStorage.getItem('user_password');
+    
+    if (savedEmail) setEmail(savedEmail);
+    if (savedPassword) setPassword(savedPassword);
+  }, []);
 
     const userDetails ={
         email: email,
-        password: password
+        password: password,
     }
 
    const sendUserDetails= async ()=>{
@@ -16,17 +29,37 @@ export default function page() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "credentials": "include"
         },
         body: JSON.stringify(userDetails),
     });
 
     if (response.ok) {
-        const data = await response.json();
-        alert(JSON.stringify(data));
-    } else {
+      if (RememberMe) {
+        // Store email and password in localStorage
+        localStorage.setItem('user_email', email);
+        localStorage.setItem('user_password', password);
+      } else {
+        // Clear localStorage if "Remember Me" is not checked
+        localStorage.removeItem('user_email');
+        localStorage.removeItem('user_password');
+      }
+       
+      
+      const data = await response.json();
+
+        if(data.success==true){
+        toast.success(data.content);
+        const token = response.headers.get('Authorization')?.replace('Bearer ', '');
+        login();
+router.push("/home");
+}else{
+          toast.error(data.content);
+
+        }
+      } else {
         // Handle HTTP errors
         console.error('HTTP error:', response.status);
-        alert('Error: ' + response.statusText);
     }
 } catch (e: any) {
     // Handle fetch errors
@@ -36,7 +69,8 @@ export default function page() {
    }
 
   return (
-      <>  <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <>   
+  <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2 className="mt-10 text-center tracking-[1px] text-2xl font-thin leading-9 text-gray-200">
         BeFit | Sign In
       </h2>
@@ -90,7 +124,7 @@ export default function page() {
             <input
               className="checkbox__trigger visuallyhidden"
               type="checkbox"
-              id="rememberMe"
+              id="rememberMe" onChange={()=>setRememberMe(!RememberMe)}
             />
             <span className="checkbox__symbol">
               <svg

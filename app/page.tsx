@@ -1,10 +1,17 @@
+"use client";
 import { ReactNode } from "react"; 
 import Image from "next/image";
 import Nav from "./components/(Nav)/Nav";
+import useAuthStore from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const {isLoggedIn} = useAuthStore();
+  const router = useRouter();
+if(!isLoggedIn){
   return (
-    <div> <main>
+    <div>
+       <main>
       <Nav/>
     {/* <!-- Hero --> */}
     <div className="flex flex-col border-b border-gray-200 lg:border-0">
@@ -194,4 +201,9 @@ export default function Home() {
   </main>
     </div>
   );
+
+}else{
+ router.push("/home"); 
+}
+ 
 }

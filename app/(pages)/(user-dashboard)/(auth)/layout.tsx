@@ -2,7 +2,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
   return <div>   <div className="flex sm:flex-row flex-col justify-center items-center w-full">
   <img
     draggable="false"
-    src="signin.jpg"
+    src="/images/signin.jpg"
     className="w-[50%] sm:block hidden h-screen object-cover object-center "
     alt=""
   />
