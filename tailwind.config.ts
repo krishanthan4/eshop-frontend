@@ -63,6 +63,6 @@ const config: Config = withMT({
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),('@tailwindcss/forms'),('@tailwindcss/typography')],
 });
 export default config;

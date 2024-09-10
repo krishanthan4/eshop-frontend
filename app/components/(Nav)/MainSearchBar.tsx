@@ -13,11 +13,11 @@ export default function MainSearchBar() {
         placeholder="Search" required />
     </div>
     {/* <!-- view live texts div --> */}
-  <div id="searchTextMain" className="w-full absolute items-center justify-center flex-col  z-20 h-auto">
+  {/* <div id="searchTextMain" className="w-full absolute items-center justify-center flex-col  z-20 h-auto">
     <div id="searchTextSub"
       className="flex rounded-lg shadow-sm shadow-gray-500 justify-center md:w-[25%] lg:w-[35%] p-4 flex-col lg:min-w-0 min-w-[50%]  md:ms-0 -ms-32  md:min-w-[60%] md:max-w-[80%]">
     </div>
-  </div> 
+  </div>  */}
   </div>
   )
 }
