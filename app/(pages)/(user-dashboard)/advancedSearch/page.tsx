@@ -169,7 +169,7 @@ export default function Page() {
             {/* Product grid */}
             <div className="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
                 <div className='grid grid-cols-2 gap-6 my-10 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3'>
-                <ProductComponent/>
+                {/* <ProductComponent/>
 <ProductComponent/>
 <ProductComponent/>
 <ProductComponent/>
@@ -183,7 +183,7 @@ export default function Page() {
 <ProductComponent/>
 <ProductComponent/>
 <ProductComponent/>
-<ProductComponent/>
+<ProductComponent/> */}
 
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { Radio, RadioGroup } from '@headlessui/react'
 import { CurrencyDollarIcon, GlobeAmericasIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/router';
 
 const product = {
   id:1,
@@ -29,7 +30,8 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Page() {
+
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
 
   return (

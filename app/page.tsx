@@ -1,14 +1,15 @@
 "use client";
-import { ReactNode } from "react"; 
+import { ReactNode, useEffect } from "react"; 
 import Image from "next/image";
 import Nav from "./components/(Nav)/Nav";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
 
 export default function Home() {
-  const {isLoggedIn} = useAuthStore();
   const router = useRouter();
-if(!isLoggedIn){
+
   return (
     <div>
        <main>
@@ -25,7 +26,7 @@ if(!isLoggedIn){
                 <h1 className="text-4xl font-extrabold tracking-tight text-gray-200 sm:text-5xl text-center xl:text-6xl"> One-Stop Shop for Fitness Gear</h1>
                 <p className="mt-4 text-xl text-gray-600">Elevate your fitness journey with premium equipment for calisthenics, swimming, gym, skateboarding, and badminton. Get fit, stay fit.</p>
                 <div className="mt-6 text-center">
-                  <a href="/signin" className="inline-block bg-gray-200  py-3 px-8 rounded-md font-medium text-[#252629] hover:bg-gray-500">Shop To Fit</a>
+                  <a href="/home" className="inline-block bg-gray-200  py-3 px-8 rounded-md font-medium text-[#252629] hover:bg-gray-500">Shop To Fit</a>
                 </div>
               </div>
             </div>
@@ -98,7 +99,7 @@ if(!isLoggedIn){
         <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
           <h2 id="cause-heading" className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Why BeFit ?</h2>
           <p className="mt-3 text-xl text-white">Choose beFit for premium equipment, expert advice, and unparalleled support to achieve your fitness goals effectively and efficiently</p>
-          <a href="/" className="mt-8 w-full block bg-[#1e1f22f5] border border-[#27282c] rounded-md py-3 px-8 text-base font-medium text-gray-200 hover:bg-[#151618] sm:w-auto">Read our story</a>
+          <Link href={"/"} className="mt-8 w-full block bg-[#1e1f22f5] border border-[#27282c] rounded-md py-3 px-8 text-base font-medium text-gray-200 hover:bg-[#151618] sm:w-auto">Read our story</Link>
         </div>
       </div>
     </section>
@@ -158,7 +159,7 @@ if(!isLoggedIn){
                   Up to 50% off.
                 </h2>
                 <div className="mt-6 text-base">
-                  <a href="/signin" className="font-semibold text-white">Shop the sale<span aria-hidden="true"> &rarr;</span></a>
+                  <a href="/home" className="font-semibold text-white">Shop the sale<span aria-hidden="true"> &rarr;</span></a>
                 </div>
               </div>
 
@@ -201,9 +202,4 @@ if(!isLoggedIn){
   </main>
     </div>
   );
-
-}else{
- router.push("/home"); 
-}
- 
 }

@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainSearchBar from "./MainSearchBar";
 import {nav_category_mobile,nav_flyout_calisthenics,nav_flyout_skateboarding,nav_flyout_weight} from "@/app/components/Objects";
 import NavFlyoutMenuComponent from "./NavFlyoutMenuComponent";
 import useAuthStore from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Nav() {
   const [mobileMenuButtonStatus, setMobileMenuButtonStatus] = useState(true);
@@ -12,9 +14,18 @@ export default function Nav() {
   const [flyoutMenuWeightToggle,setFlyoutMenuWeightToggle] = useState(true);
   const [flyoutMenuCalisthenicsToggle,setFlyoutMenuCalisthenicsToggle] = useState(true);
   const [flyoutMenuSkateboardsToggle,setFlyoutMenuSkateboardsToggle] = useState(true);
+  interface Category {
+    id: number;
+    catImg: string;
+    catName: string;
+  }
+  
+  const [category, setCategories] = useState<Category[]>([]);
   const MobileMenuNav = () => {
     setMobileMenuButtonStatus(!mobileMenuButtonStatus);
   };
+  const router = useRouter();
+  
 
   const dropdownUserList = () => {
     setIsDropDownClicked(!isDropDownClicked);
@@ -43,9 +54,69 @@ export default function Nav() {
     }
     setFlyoutMenuSkateboardsToggle(!flyoutMenuSkateboardsToggle);
   };
-  const signOut = () => {};
 
   const {isLoggedIn,login,logout} = useAuthStore();
+
+  const signOutSession = async () => {
+    try{
+      const response = await fetch('/api/Signout', {
+           method: "POST",
+           headers: {
+               "credentials": "include"
+           },
+       });
+   
+       if (response.ok) {
+         const data = await response.json();
+   
+           if(data.success==true){
+           logout();
+   }else{
+             toast.error("Something Went Wrong");
+           }
+         } else {
+           // Handle HTTP errors
+           console.error('HTTP error:', response.status);
+       }
+   } catch (e: any) {
+       // Handle fetch errors
+       console.error('Fetch error:', e);
+       toast.error("Something Went Wrong");
+      }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await fetch('/api/GetCategories', {
+          method: "POST",
+          headers: {
+            "credentials": "include",
+          },
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+    
+          if (data.success) {
+            setCategories(data.categoryList);
+          } else {
+            toast.error("Something Went Wrong");
+          }
+        } else {
+          console.error('HTTP error:', response.status);
+        }
+      } catch (e: any) {
+        console.error('Fetch error:', e);
+        toast.error("Something Went Wrong");
+      }
+    };
+    
+    getData();
+  }, []);
+  
+
+
  
   return (
     <div className="">
@@ -59,6 +130,7 @@ export default function Nav() {
           role="dialog"
           aria-modal="true"
         >
+
           <div
             className="fixed inset-0 bg-black bg-opacity-25"
             aria-hidden="true"
@@ -107,29 +179,29 @@ export default function Nav() {
                 {/* <?php $nav_category_mobile_rs = Database::search("SELECT * FROM `category` LIMIT 6");
 for ($nav_cat=0; $nav_cat < $nav_category_mobile_rs->num_rows; $nav_cat++) { 
 $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
-            {nav_category_mobile.map((e) => (
+            {category.map((e) => (
                   <div className="group relative">
                   <img
-                    src={"category_images/"+e.cat_img}
+                    src={"/images/"+e.catImg}
                     alt="Models sitting back to back, wearing Basic Tee in black and bone."
                     className="object-center aspect-w-1 aspect-h-1 rounded-md bg-gray-100 min-h-[5.5rem] min-w-[5.5rem] group-hover:opacity-75 object-cover"
                   />
                   <Link
-                    href={"search?query=" + e.cat_name}
+                    href={"search?query=" + e.catName}
                     className="mt-6 block text-sm font-medium text-gray-100"
                   >
                     <span
                       className="absolute z-10 inset-0"
                       aria-hidden="true"
                     >
-                      {e.cat_name}
+                      {e.catName}
                     </span>
                   </Link>
                   <p aria-hidden="true" className="mt-1 text-sm text-gray-100">
                     Shop now
                   </p>
                 </div>
-              ))};
+              ))}
 
                 {/* <?php } ?> */}
               </div>
@@ -173,12 +245,11 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
 
               {/* <!-- Logo --> */}
               <Link
-                href={"/"}
+                href={"/home"}
                 className="ml-4 tracking-[1px] text-2xl font-thin flex lg:ml-0"
               >
                 BeFit
               </Link>
-
               {/* <!-- Flyout menus --> */}
               <div className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="h-full flex space-x-8">
@@ -196,25 +267,14 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                   {/* signed In drop down start */}
 {isLoggedIn ? (
 <>
-                <button
-                  id="dropdownUserAvatarButton"
-                  onClick={dropdownUserList}
-                  className=" text-sm bg-[#242529] rounded-full md:block hidden md:me-0 focus:ring-1 focus:ring-gray-300 "
-                  type="button"
-                >
-                  <img
-                    draggable="false"
-                    className="grayscale border-2 border-gray-500 object-center object-cover w-10 h-10 rounded-full"
-                    src="/images/new_user.png"
-                  />
-                </button>
+     
 
                 {/* <!-- Dropdown menu --> */}
                 <div
                   id="dropdownAvatar"
                   className={` ${
                     isDropDownClicked ? "hidden" : ""
-                  } z-30 bg-[#242529] divide-y divide-gray-100 mt-[14rem] rounded-lg shadow w-44 `}
+                  } z-30 bg-[#242529] relative divide-y divide-gray-100 mt-[14rem] rounded-lg shadow w-44 `}
                 >
                   <ul
                     className="py-2 text-sm "
@@ -245,7 +305,7 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                       </li>
                     </Link>
 
-                    <Link href={"/myProducts"}>
+                    <Link href={"/myProduct"}>
                       <li className=" flex items-center hover:bg-[#35353d] ">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -262,66 +322,8 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                         </p>
                       </li>
                     </Link>
-                    <Link href={"/wishlist"}>
-                      <li className="  flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-dropbox  text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
-                        </svg>
-                        <p className="block px-4 py-2 ">Wishlist</p>
-                      </li>
-                    </Link>
-
-                    <Link href={"/purchasedHistory"}>
-                      <li className="  flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-dropbox  text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 1a2 2 0 0 1 2 2v2H6V3a2 2 0 0 1 2-2m3 4V3a3 3 0 1 0-6 0v2H3.36a1.5 1.5 0 0 0-1.483 1.277L.85 13.13A2.5 2.5 0 0 0 3.322 16h9.355a2.5 2.5 0 0 0 2.473-2.87l-1.028-6.853A1.5 1.5 0 0 0 12.64 5zm-1 1v1.5a.5.5 0 0 0 1 0V6h1.639a.5.5 0 0 1 .494.426l1.028 6.851A1.5 1.5 0 0 1 12.678 15H3.322a1.5 1.5 0 0 1-1.483-1.723l1.028-6.851A.5.5 0 0 1 3.36 6H5v1.5a.5.5 0 1 0 1 0V6z" />
-                        </svg>
-                        <p className="block px-4 py-2 ">Purchased History</p>
-                      </li>
-                    </Link>
-                    {/* <?php  if($sellingHistoryNav_rs->num_rows!==0){ ?> */}
-                    {/* <Link href={"/sellingHistory"}>
-                    <li className="  flex items-center hover:bg-[#35353d] ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-rocket   text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0" viewBox="0 0 16 16">
-  <path d="M8 8c.828 0 1.5-.895 1.5-2S8.828 4 8 4s-1.5.895-1.5 2S7.172 8 8 8"/>
-  <path d="M11.953 8.81c-.195-3.388-.968-5.507-1.777-6.819C9.707 1.233 9.23.751 8.857.454a3.5 3.5 0 0 0-.463-.315A2 2 0 0 0 8.25.064.55.55 0 0 0 8 0a.55.55 0 0 0-.266.073 2 2 0 0 0-.142.08 4 4 0 0 0-.459.33c-.37.308-.844.803-1.31 1.57-.805 1.322-1.577 3.433-1.774 6.756l-1.497 1.826-.004.005A2.5 2.5 0 0 0 2 12.202V15.5a.5.5 0 0 0 .9.3l1.125-1.5c.166-.222.42-.4.752-.57.214-.108.414-.192.625-.281l.198-.084c.7.428 1.55.635 2.4.635s1.7-.207 2.4-.635q.1.044.196.083c.213.09.413.174.627.282.332.17.586.348.752.57l1.125 1.5a.5.5 0 0 0 .9-.3v-3.298a2.5 2.5 0 0 0-.548-1.562zM12 10.445v.055c0 .866-.284 1.585-.75 2.14.146.064.292.13.425.199.39.197.8.46 1.1.86L13 14v-1.798a1.5 1.5 0 0 0-.327-.935zM4.75 12.64C4.284 12.085 4 11.366 4 10.5v-.054l-.673.82a1.5 1.5 0 0 0-.327.936V14l.225-.3c.3-.4.71-.664 1.1-.861.133-.068.279-.135.425-.199M8.009 1.073q.096.06.226.163c.284.226.683.621 1.09 1.28C10.137 3.836 11 6.237 11 10.5c0 .858-.374 1.48-.943 1.893C9.517 12.786 8.781 13 8 13s-1.517-.214-2.057-.607C5.373 11.979 5 11.358 5 10.5c0-4.182.86-6.586 1.677-7.928.409-.67.81-1.082 1.096-1.32q.136-.113.236-.18Z"/>
-  <path d="M9.479 14.361c-.48.093-.98.139-1.479.139s-.999-.046-1.479-.139L7.6 15.8a.5.5 0 0 0 .8 0z"/>
-</svg>
-                      <p className="block px-4 py-2 ">selling History</p>
-                    </li>
-                  </Link> */}
-                    {/* <?php } ?> */}
-
-                    <Link href={"/contactAdmin"}>
-                      <li className="  flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-dropbox  text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                        </svg>
-                        <p className="block px-4 py-2 ">Contact Admin</p>
-                      </li>
-                    </Link>
-                    <button onClick={logout} className="cursor-pointer">
+  
+                    <Link href={"/"} onClick={signOutSession} className="cursor-pointer">
                       <li className="  flex items-center hover:bg-[#35353d] ">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -340,13 +342,25 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                         </svg>
                         <p className="block px-4 py-2 text-sm ">Sign out</p>
                       </li>
-                    </button>
+                    </Link>
                   </ul>
                 </div>
+                <button
+                  id="dropdownUserAvatarButton"
+                  onClick={dropdownUserList}
+                  className="relative text-sm bg-[#242529] rounded-full md:block hidden md:me-0 focus:ring-1 focus:ring-gray-300 "
+                  type="button"
+                >
+                  <img
+                    draggable="false"
+                    className="grayscale border-2 border-gray-500 object-center object-cover w-10 h-10 rounded-full"
+                    src="/images/new_user.png"
+                  />
+                </button>
 </>
 ): (
 <p>
-<a href="signin">Signin</a> | <a href="/signup">Sign Up</a>
+<Link href={"signin"}>Signin</Link> | <Link href={"/signup"}>Sign Up</Link>
 </p>
 )}
            

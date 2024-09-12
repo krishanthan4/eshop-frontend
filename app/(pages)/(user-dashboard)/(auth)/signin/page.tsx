@@ -7,7 +7,7 @@ export default function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [RememberMe, setRememberMe] = useState(false);
-  const { login } = useAuthStore();
+  const { login,logout } = useAuthStore();
 const router = useRouter();
  
   useEffect(() => {
@@ -50,12 +50,16 @@ const router = useRouter();
 
         if(data.success==true){
         toast.success(data.content);
-        const token = response.headers.get('Authorization')?.replace('Bearer ', '');
+        // const token = response.headers.get('Authorization')?.replace('Bearer ', '');
         login();
 router.push("/home");
 }else{
-          toast.error(data.content);
-
+  if(data.content=="NoSession"){
+router.push("/signin");
+logout();
+  }else{
+    toast.error(data.content);
+  }
         }
       } else {
         // Handle HTTP errors
@@ -99,11 +103,7 @@ router.push("/home");
           <label className="block text-sm font-medium leading-6 text-gray-300">
             Password
           </label>
-          <div className="text-sm">
-            <div className="font-semibold cursor-pointer text-gray-500 hover:text-gray-400">
-              Forgot password?
-            </div>
-          </div>
+
         </div>
         <div className="mt-2">
           <input
