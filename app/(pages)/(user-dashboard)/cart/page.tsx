@@ -6,6 +6,7 @@ declare const payhere: {
   onDismissed?: () => void;
   onError?: (error: string) => void;
 };
+import RelatedProducts from '@/app/components/RelatedProducts';
 import useAuthStore from '@/store/useAuthStore';
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link';
@@ -107,14 +108,50 @@ function startPayment({ payhereList }: any) {
   // Payment lifecycle callbacks
   payhere.onCompleted = function onCompleted(orderId: string) {
     console.log("Payment completed. OrderID:" + orderId);
+
+   let setData = async () => {
+    try {
+      const response = await fetch('/api/Checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',   // Added content-type for proper request handling
+          'credentials': 'include',             // Pass cookies for session management
+        },
+        body: JSON.stringify({order_id:orderId}),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        // console.log(data);
+  
+        if (data.success) {
+          // Start the payment process if checkout is successful
+          setCart([]);
+          toast.success(data.content);
+        } else {
+          toast.error(data.content);
+        }
+      } else {
+        console.error('HTTP error:', response.status);
+        toast.error('Failed to fetch checkout data.');
+      }
+    } catch (e) {
+      console.error('Fetch error:', e);
+      toast.error('Something Went Wrong');
+    }
+   }
+   setData();
+
   };
 
   payhere.onDismissed = function onDismissed() {
-    console.log("Payment dismissed");
+    // console.log("Payment dismissed");
+    toast.error("Payment dismissed");
   };
 
   payhere.onError = function onError(error: string) {
-    console.log("Error: " + error);
+    // console.log("Error: " + error);
+    toast.error("Error: " + error);
   };
 
   // Payment object
@@ -147,7 +184,7 @@ function startPayment({ payhereList }: any) {
 
 const checkoutFunction = async () => {
   try {
-    const response = await fetch('/api/Checkout', {
+    const response = await fetch('/api/LoadCheckout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',   // Added content-type for proper request handling
@@ -202,7 +239,7 @@ const checkoutFunction = async () => {
                <div>
                  <div className="flex justify-between">
                    <h3 className="text-sm">
-                     <a href={`/search/${cartItem.product.id}`} className="font-medium text-gray-300 hover:text-gray-500">
+                     <a href={`/singleProduct/${cartItem.product.id}`} className="font-medium text-gray-300 hover:text-gray-500">
                        {cartItem.product.title}
                      </a>
                    </h3>
@@ -297,9 +334,7 @@ const checkoutFunction = async () => {
       </div>
       }
     </div>
-
-
-
+    <RelatedProducts/>
   </div>
   )
 }

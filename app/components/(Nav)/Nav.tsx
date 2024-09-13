@@ -140,15 +140,22 @@ export default function Nav() {
   }, []);
   
 
+  const [isMounted, setIsMounted] = useState(false);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  if (!isMounted) {
+    return null;
+  }
+  
  
   return (
     <div className="">
       {/* <!-- Mobile Menu start --> */}
-      <div
-        className={`${mobileMenuButtonStatus ? "hidden" : ""}`}
-        id="MobileMenublack"
-      >
+      {isMounted && (
+  <div className={`${mobileMenuButtonStatus ? "hidden" : ""}`} id="MobileMenublack">
         <div
           className="fixed inset-0  flex z-[90] lg:hidden "
           role="dialog"
@@ -229,7 +236,7 @@ export default function Nav() {
           </div>
         </div>
       </div>
-
+)}
       {/* // <!-- Main Nav Bar start --> */}
       <div className="relative z-50 bg-[#242529] text-gray-100 shadow-md shadow-[#141516]">
         <div
@@ -387,7 +394,7 @@ export default function Nav() {
                 {/* <?php } ?> */}
                 {/* <!-- Cart --> */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <Link
+                  <a
                     href={"/cart"}
                     className="group -m-2 p-2 flex items-center"
                   >
@@ -424,7 +431,7 @@ export default function Nav() {
                 </Link>
               {/* <?php } else { ?> */}
                     <span className="-ms-3 -mt-4 w-[1.1rem] text-center h-[1.1rem] rounded-full text-sm  text-white"></span>
-                  </Link>
+                  </a>
                   {/* // <?php } } catch (\Throwable $th) { } ?> */}
                 </div>
               </div>

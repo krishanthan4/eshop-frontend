@@ -6,7 +6,7 @@ import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import HomeSortComponent from "@/app/components/(home)/HomeSortComponent";
 import ProductComponent from "@/app/components/(home)/ProductComponent";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Pagination, { paginate } from "@/app/components/Pagination";
 
@@ -69,16 +69,18 @@ export default function page() {
           <HomeSortComponent />
           <CarouselComponent />
         </div>
-        <CategoryComponent CategoryObject={categories}/>
-
+   <Suspense fallback={<p>Loading Categories ...</p>}>
+   <CategoryComponent CategoryObject={categories}/>
+      </Suspense>
         <section
           aria-="products-heading"
           className="max-w-7xl mx-auto overflow-hidden sm:px-6 lg:px-8"
         >
           <p className="text-xl p-3">Just For You</p>
           <div className="-mx-px  gap-1 grid grid-cols-2 sm:mx-0 md:grid-cols-3 lg:grid-cols-6">
+            <Suspense fallback={<p>Loading Posts ...</p>}>
             <ProductComponent ProductObject={paginatedPosts}/>
-           
+      </Suspense>
             {/*  */}
           </div>
           <Pagination

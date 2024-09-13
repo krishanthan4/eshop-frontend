@@ -16,8 +16,8 @@ export default function ProductComponent({ ProductObject }: types) {
             <img 
               src={
                 e.productImgs && e.productImgs.length > 0 
-                ? "images/" + e.productImgs[0].imgPath 
-                : "images/default-image.png"  // Fallback image if no productImgs
+                ? "/images/" + e.productImgs[0].imgPath 
+                : ""  // Fallback image if no productImgs
               }
               alt={e.title}
               className="w-full min-h-40 min-w-40 max-w-50 max-h-50 h-full object-center object-cover"

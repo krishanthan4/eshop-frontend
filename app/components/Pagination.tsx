@@ -13,17 +13,15 @@ export default function Pagination ({ items, pageSize, currentPage, onPageChange
    
      return (
       <div>
-        <ul className={"flex justify-between items-center list-none"}>
+        <ul className={"flex justify-center gap-3 items-center list-none"}>
           {pages.map((page) => (
-            <li
+            <li onClick={() => onPageChange(page)}
               key={page}
               className={
-                page === currentPage ? "bg-gray-300 text-black rounded-md p-3" : "bg-gray-800 text-gray-200 rounded-md p-3"
+                page === currentPage ? "bg-gray-300 cursor-pointer text-black rounded-md p-3" : "bg-gray-800 cursor-pointer text-gray-200 rounded-md p-3"
               }
             >
-              <a className={"cursor-pointer"} onClick={() => onPageChange(page)}>
                 {page}
-              </a>
             </li>
           ))}
         </ul>

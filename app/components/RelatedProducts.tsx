@@ -1,18 +1,17 @@
-import ProductComponent from '@/app/components/(home)/ProductComponent'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import ProductComponent from "./(home)/ProductComponent";
 
-export default function page({text}:any) {
-  const [productList, setProductList] = useState([]);
+export default function RelatedProducts() {
+const [productList, setProductList] = useState([]);
     useEffect(() => {
         const getData = async () => {
           try {
-            const response = await fetch('/api/Search', {
+            const response = await fetch('/api/RelatedProducts', {
               method: "POST",
               headers: {
                 "credentials": "include",
               },
-              body: JSON.stringify({ text: text})
             });
     
             if (response.ok) {
@@ -35,8 +34,10 @@ export default function page({text}:any) {
         getData();
       }, []);
   return (
-    <div className="mx-6"><p className="text-xl mb-6 font-bold ">{text}</p>
-    <div className="-mx-px  gap-1 grid grid-cols-2 sm:mx-0 md:grid-cols-3 lg:grid-cols-6"><ProductComponent ProductObject={productList}/></div>
-        </div>
+    <div className="mx-6"><p className="text-xl mb-6 font-bold ">Explore More </p>
+
+<div className="-mx-px  gap-1 grid grid-cols-2 sm:mx-0 md:grid-cols-3 lg:grid-cols-6"><ProductComponent ProductObject={productList}/></div>
+
+    </div>
   )
 }

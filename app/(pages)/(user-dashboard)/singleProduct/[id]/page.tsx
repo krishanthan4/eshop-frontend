@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { StarIcon } from '@heroicons/react/20/solid';
 import { Radio, RadioGroup } from '@headlessui/react';
 import { CurrencyDollarIcon, GlobeAmericasIcon } from '@heroicons/react/24/outline';
+import RelatedProducts from '@/app/components/RelatedProducts';
 
 // Define types for nested objects
 interface Category {
@@ -319,6 +320,8 @@ toast.success(data.content);
           </div>
         </div>
       </div>
+
+      <RelatedProducts/>
     </div>
   );
 }
