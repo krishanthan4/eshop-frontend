@@ -18,15 +18,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
  
+  function payHereURL(){
+    if (process && process.env.NODE_ENV == "production")
+      return '/payhere.js';
+    else
+      return '/payhere.dev.js';
+  }
+  
+
   return (
     <html lang="en" className="h-full">
+      <head>
+      <script src={payHereURL()}></script>
+      </head>
       <body className="h-full bg-[#1d1e20] text-gray-200 overflow-x-hidden">
         <LayoutWrapper>
-    <Toaster richColors position="top-right"/>
-
+    <Toaster duration={3000} closeButton visibleToasts={1} richColors position="top-right"/>
           {children}
         </LayoutWrapper>
-      </body>
+        <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
+        </body>
     </html>
   );
 }

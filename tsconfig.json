@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Nav.jsx", "app/(pages)/(user-dashboard)/cart/page.tsx", "app/components/(home)/ProductComponent.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Nav.jsx", "app/(pages)/(user-dashboard)/cart/page.jsx", "app/components/(home)/ProductComponent.jsx", "lib/Payhere.js"],
   "exclude": ["node_modules"]
 }

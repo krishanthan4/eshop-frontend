@@ -8,6 +8,7 @@ import HomeSortComponent from "@/app/components/(home)/HomeSortComponent";
 import ProductComponent from "@/app/components/(home)/ProductComponent";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import Pagination, { paginate } from "@/app/components/Pagination";
 
 
 export default function page() {
@@ -53,6 +54,15 @@ export default function page() {
   // if (!isLoggedIn) {
     // router.push("/signin");
   // } else {
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
+ 
+  const onPageChange = (page:any) => {
+    setCurrentPage(page);
+  };
+  const paginatedPosts = paginate(products, currentPage, pageSize);
+
     return (
       <div>
         <div className="flex flex-row justify-evenly">
@@ -67,9 +77,16 @@ export default function page() {
         >
           <p className="text-xl p-3">Just For You</p>
           <div className="-mx-px  gap-1 grid grid-cols-2 sm:mx-0 md:grid-cols-3 lg:grid-cols-6">
-            <ProductComponent ProductObject={products}/>
+            <ProductComponent ProductObject={paginatedPosts}/>
+           
             {/*  */}
           </div>
+          <Pagination
+       items={products.length} // 100
+       currentPage={currentPage} // 1
+       pageSize={pageSize} // 10
+       onPageChange={onPageChange}
+        />
         </section>
       </div>
     );

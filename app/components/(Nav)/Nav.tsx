@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainSearchBar from "./MainSearchBar";
 import {nav_category_mobile,nav_flyout_calisthenics,nav_flyout_skateboarding,nav_flyout_weight} from "@/app/components/Objects";
 import NavFlyoutMenuComponent from "./NavFlyoutMenuComponent";
@@ -10,10 +10,34 @@ import { toast } from "sonner";
 
 export default function Nav() {
   const [mobileMenuButtonStatus, setMobileMenuButtonStatus] = useState(true);
-  const [isDropDownClicked, setIsDropDownClicked] = useState(true);
   const [flyoutMenuWeightToggle,setFlyoutMenuWeightToggle] = useState(true);
   const [flyoutMenuCalisthenicsToggle,setFlyoutMenuCalisthenicsToggle] = useState(true);
   const [flyoutMenuSkateboardsToggle,setFlyoutMenuSkateboardsToggle] = useState(true);
+  const [isDropDownClicked, setIsDropDownClicked] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setIsDropDownClicked(false);
+    }
+  };
+
+  useEffect(() => {
+    // Attach the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Clean up the event listener
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   interface Category {
     id: number;
     catImg: string;
@@ -176,9 +200,6 @@ export default function Nav() {
               tabIndex={0}
             >
               <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-                {/* <?php $nav_category_mobile_rs = Database::search("SELECT * FROM `category` LIMIT 6");
-for ($nav_cat=0; $nav_cat < $nav_category_mobile_rs->num_rows; $nav_cat++) { 
-$nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
             {category.map((e) => (
                   <div className="group relative">
                   <img
@@ -202,8 +223,6 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                   </p>
                 </div>
               ))}
-
-                {/* <?php } ?> */}
               </div>
             </div>
             {/* // <?php require_once "./guis/partials/nav_profile.php" ?> */}
@@ -263,100 +282,93 @@ $nav_category_mobile = $nav_category_mobile_rs->fetch_assoc(); ?> */}
                 </div>
               </div>
               <MainSearchBar />
+              <Link href={"/advancedSearch"} className="bg-gray-500 hover:bg-gray-400 text-black py-1 px-2 rounded-md">Advanced Search</Link>
               <div className="ml-auto flex items-center">
                   {/* signed In drop down start */}
 {isLoggedIn ? (
 <>
-     
-
                 {/* <!-- Dropdown menu --> */}
                 <div
-                  id="dropdownAvatar"
-                  className={` ${
-                    isDropDownClicked ? "hidden" : ""
-                  } z-30 bg-[#242529] relative divide-y divide-gray-100 mt-[14rem] rounded-lg shadow w-44 `}
-                >
-                  <ul
-                    className="py-2 text-sm "
-                    aria-labelledby="dropdownUserAvatarButton"
-                  >
-                    <Link href={"/userProfile"}>
-                      <li className=" flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          className="text-gray-100 group-hover:text-gray-100 flex-shrink-0 ml-2"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          width="16"
-                          height="16"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <p className="block px-4 py-2 hover:bg-[#35353d] ">
-                          Profile
-                        </p>
-                      </li>
-                    </Link>
+        ref={dropdownRef}
+        id="dropdownAvatar"
+        className={`${
+          isDropDownClicked ? '' : 'hidden'
+        } z-30 bg-[#242529] relative divide-y divide-gray-100 mt-[14rem] rounded-lg shadow w-44`}
+      >
+        <ul className="py-2 text-sm" aria-labelledby="dropdownUserAvatarButton">
+          <Link href="/userProfile">
+            <li className="flex items-center hover:bg-[#35353d]">
+              <svg
+                className="text-gray-100 group-hover:text-gray-100 flex-shrink-0 ml-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p className="block px-4 py-2">Profile</p>
+            </li>
+          </Link>
+          <Link href="/myProduct">
+            <li className="flex items-center hover:bg-[#35353d]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-dropbox text-gray-100 ml-2 group-hover:text-gray-100 flex-shrink-0"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8.01 4.555 4.005 7.11 8.01 9.665 4.005 12.22 0 9.651l4.005-2.555L0 4.555 4.005 2zm-4.026 8.487 4.006-2.555 4.005 2.555-4.005 2.555zm4.026-3.39 4.005-2.556L8.01 4.555 11.995 2 16 4.555 11.995 7.11 16 9.665l-4.005 2.555z" />
+              </svg>
+              <p className="block px-4 py-2">My Products</p>
+            </li>
+          </Link>
+          <Link href={"/"} onClick={() => {signOutSession()}} className="cursor-pointer">
+            <li className="flex items-center hover:bg-[#35353d]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                stroke="currentColor"
+                className="text-gray-100 ml-2 group-hover:text-gray-100 flex-shrink-0"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                />
+              </svg>
+              <p className="block px-4 py-2 text-sm">Sign out</p>
+            </li>
+          </Link>
+        </ul>
+      </div>
 
-                    <Link href={"/myProduct"}>
-                      <li className=" flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-dropbox  text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8.01 4.555 4.005 7.11 8.01 9.665 4.005 12.22 0 9.651l4.005-2.555L0 4.555 4.005 2zm-4.026 8.487 4.006-2.555 4.005 2.555-4.005 2.555zm4.026-3.39 4.005-2.556L8.01 4.555 11.995 2 16 4.555 11.995 7.11 16 9.665l-4.005 2.555z" />
-                        </svg>
-                        <p className="block px-4 py-2 hover:bg-[#35353d] d">
-                          My Products
-                        </p>
-                      </li>
-                    </Link>
-  
-                    <Link href={"/"} onClick={signOutSession} className="cursor-pointer">
-                      <li className="  flex items-center hover:bg-[#35353d] ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          width="16"
-                          height="16"
-                          stroke="currentColor"
-                          className=" text-gray-100  ml-2 group-hover:text-gray-100 flex-shrink-0"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-                          />
-                        </svg>
-                        <p className="block px-4 py-2 text-sm ">Sign out</p>
-                      </li>
-                    </Link>
-                  </ul>
-                </div>
-                <button
-                  id="dropdownUserAvatarButton"
-                  onClick={dropdownUserList}
-                  className="relative text-sm bg-[#242529] rounded-full md:block hidden md:me-0 focus:ring-1 focus:ring-gray-300 "
-                  type="button"
-                >
-                  <img
-                    draggable="false"
-                    className="grayscale border-2 border-gray-500 object-center object-cover w-10 h-10 rounded-full"
-                    src="/images/new_user.png"
-                  />
-                </button>
+      <button
+        ref={buttonRef}
+        id="dropdownUserAvatarButton"
+        onClick={dropdownUserList}
+        className="relative text-sm bg-[#242529] rounded-full md:block hidden md:me-0 focus:ring-1 focus:ring-gray-300"
+        type="button"
+      >
+        <img
+          draggable="false"
+          className="grayscale border-2 border-gray-500 object-center object-cover w-10 h-10 rounded-full"
+          src="/images/new_user.png"
+        />
+      </button>
 </>
 ): (
 <p>
