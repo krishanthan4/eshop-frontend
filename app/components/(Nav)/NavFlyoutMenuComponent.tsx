@@ -54,7 +54,7 @@ aria-hidden="true"
 Shop now
 </p>
 </div>
-))};
+))}
           
 
           </div>

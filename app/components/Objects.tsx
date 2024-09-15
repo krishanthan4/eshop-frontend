@@ -37,84 +37,64 @@ export const categories = [
   {cat_name : "Electronics", cat_img : "/images/category_images/category2.jpeg"},
 ];
 
-interface Category {
-  cat_id: number;
-  cat_name: string;
-  cat_icon: string;
-  brands: Brand[];
-}
+// interface Category {
+//   cat_id: number;
+//   cat_name: string;
+//   cat_icon: string;
+//   models: Model[];
+// }
 
-interface Brand {
-  brand_id: number;
-  brand_name: string;
-  models: Model[];
-}
+// interface Model {
+//   model_id: number;
+//   model_name: string;
+//   products: Product[];
+// }
 
-interface Model {
-  model_id: number;
-  model_name: string;
-  products: Product[];
-}
+// interface Product {
+//   id: number;
+//   title: string;
+// }
 
-interface Product {
-  id: number;
-  title: string;
-}
-export const sortCategoryData: Category[] = [
-  {
-    cat_id: 1,
-    cat_name: "Electronics",
-    cat_icon: "icon-electronics.svg",
-    brands: [
-      {
-        brand_id: 101,
-        brand_name: "Apple",
-        models: [
-          {
-            model_id: 1001,
-            model_name: "iPhone 12",
-            products: [
-              { id: 1, title: "iPhone 12 128GB" },
-              { id: 2, title: "iPhone 12 256GB" },
-            ],
-          },
-        ],
-      },
-      {
-        brand_id: 102,
-        brand_name: "Samsung",
-        models: [
-          {
-            model_id: 1002,
-            model_name: "Galaxy S21",
-            products: [
-              { id: 3, title: "Galaxy S21 128GB" },
-              { id: 4, title: "Galaxy S21 256GB" },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    cat_id: 2,
-    cat_name: "Clothing",
-    cat_icon: "pc.svg",
-    brands: [
-      {
-        brand_id: 103,
-        brand_name: "Nike",
-        models: [
-          {
-            model_id: 1003,
-            model_name: "Air Max",
-            products: [
-              { id: 5, title: "Air Max 2021" },
-              { id: 6, title: "Air Max 2019" },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
+// export const sortCategoryData: Category[] = [
+// {  "categoryList": [
+//     {
+//       "categoryId": 1,
+//       "categoryName": "Electronics",
+//       "categoryIcon": "icon-electronics.svg",
+//       "categoryImg": "",
+//       "models": [
+//         {
+//           "modelName": "iPhone 12",
+//           "products": [
+//             { "title": "iPhone 12 128GB" },
+//             { "title": "iPhone 12 256GB" }
+//           ]
+//         },
+//         {
+//           "modelName": "Galaxy S21",
+//           "products": [
+//             { "title": "Galaxy S21 128GB" },
+//             { "title": "Galaxy S21 256GB" }
+//           ]
+//         }
+//       ]
+//     },
+//     {
+//       "categoryId": 2,
+//       "categoryName": "Clothing",
+//       "categoryIcon": "pc.svg",
+//       "categoryImg": "",
+//       "models": [
+//         {
+//           "modelName": "Air Max",
+//           "products": [
+//             { "title": "Air Max 2021" },
+//             { "title": "Air Max 2019" }
+//           ]
+//         }
+//       ]
+//     }
+//   ]
+// }
+// ];
+

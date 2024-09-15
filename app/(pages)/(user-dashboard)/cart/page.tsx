@@ -31,6 +31,11 @@ const { isLoggedIn } = useAuthStore();
         clrName: string;
       };
       price: string;
+      condition: {
+        conditionName: string;
+        id: number;
+      };
+      deliveryFee: string;
     };
     qty: number;
   }
@@ -83,13 +88,14 @@ async function removeCartProduct(productId: number){
       // console.log(data);
       if (data.success) {
       
-        if(data.content=="noItems"){
+        if(data.content=="Cart item not found."){
           setNoCart(false);
         }else{
-          setCart((prevItems) =>
-            prevItems.filter((item) => item.product.id !== productId)
-          );
-          setNoCart(true);
+          setCart((prevItems) => {
+            const updatedItems = prevItems.filter((item) => item.product.id !== productId);
+            setNoCart(updatedItems.length === 0);
+            return updatedItems;
+          });
         }
       } else {
         toast.error("Something Went Wrong");
@@ -213,7 +219,6 @@ const checkoutFunction = async () => {
   }
 };
 
-
   return (
     <div className="">
     <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -222,59 +227,81 @@ const checkoutFunction = async () => {
 
       {noCart && cart ? (
    <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
-   <section aria-labelledby="cart-heading" className="lg:col-span-7">
-     <ul role="list" className="divide-y divide-gray-700 border-b border-t border-gray-700">
+    <section aria-labelledby="cart-heading" className="lg:col-span-7  ">
+  <div className="overflow-x-auto ">
+  <ul role="list" className="border-t border-b border-[#313336] divide-y divide-[#313336]">
        {cart.map((cartItem, index) => (
-         <li key={index} className="flex py-6 sm:py-10">
-           <div className="flex-shrink-0">
-             <img
-               alt={cartItem.product.title}
-               src={"images/"+cartItem.product.productImgs[0].imgPath || '/default-image.jpg'} // Placeholder for the product image
-               className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
-             />
-           </div>
+      <li key={index} className="flex flex-row sm:flex-row py-6 sm:py-6 px-2 ">
+     
+           <div className="bg-[#252629]/90 rounded-md p-4 ml-2 w-24 h-24 sm:w-48 sm:h-48">
+                    <img    alt={cartItem.product.title}
+               src={"images/"+cartItem.product.productImgs[0].imgPath || '/default-image.jpg'} className="w-full h-full rounded-md object-center object-cover  "/>
+                  </div>
+           <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6  relative">
+                    {/* <!-- qty problem start --> */}
+                    <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                      <div>
+               <div className="flex justify-between w-full sm:w-auto">
+                          <h3 className="text-xl">
+                            <span className="font-medium text-gray-200">
+                              {cartItem.product.title}
+                            </span>
+                          </h3>
+                        </div>
+                 <div className="mt-2 flex text-sm items-center ">
+                 <div
+                            className={`h-8 w-8 overflow-hidden flex justify-center items-center border bg-${cartItem.product.color.clrName}-500 border-${cartItem.product.color.clrName}-500 rounded-full cursor-pointer`}>
+                          </div>
+                          <div className="w-[1px] h-[32px] border-l-[1px] border-[#393a3f] ml-4 mt-[5px] mr-4"></div>
+                     <span
+                        className="px-1 py-1 inline-flex text-xs leading-5 font-semibold rounded-lg bg-green-600/70 text-[#2b2c30] mt-2">
+                     {cartItem.product.condition.id === 1 ? 'New' : cartItem.product.condition.id === 2 ? 'Used' : 'Unknown'}
+                     </span>
 
-           <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-             <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-               <div>
-                 <div className="flex justify-between">
-                   <h3 className="text-sm">
-                     <a href={`/singleProduct/${cartItem.product.id}`} className="font-medium text-gray-300 hover:text-gray-500">
-                       {cartItem.product.title}
-                     </a>
-                   </h3>
                  </div>
-                 <div className="mt-1 flex text-sm">
-                   <p className="text-gray-500">{cartItem.product.color.clrName}</p>
-                 </div>
-                 <p className="mt-1 text-sm font-medium text-gray-200">${cartItem.product.price}</p>
+                 <div className="flex gap-2 mt-2">
+                          <p className="mt-2 text-sm font-medium text-gray-300 ">Unit Price <span className="text-gray-300">:</span>
+                          </p>
+                          <p id="" className=" mt-1 font-medium text-gray-200">Rs.{cartItem.product.price}.00
+                          </p>
+                        </div>
+                        <div className="flex gap-2 items-center mt-2">
+                          <p className="mt-2 text-sm font-medium text-gray-300 ">Quanity<span className="text-gray-300"> : </span></p>
+                          <input min="1" max=" $product_dataqty " type="number"
+                            className="product_qty w-[50px] mt-2 h-8 rounded-md p-2 font-medium bg-[#2b2c30] text-gray-400"
+                            value={cartItem.qty} 
+                           disabled
+                            id=" $cart_datacart_id qtyNum"/>
+                        </div>
+
+                        <div className="flex  gap-2 mt-2">
+                          <p className="mt-2 text-sm font-medium text-gray-300 ">Delivery Fee<span className="text-gray-300"> :
+                            </span></p>
+                          <p className="mt-2 text-sm font-medium text-gray-200">Rs.{cartItem.product.deliveryFee}.00 
+                          </p>
+                        </div>
                </div>
 
-               <div className="mt-4 sm:mt-0 sm:pr-9">
-                 <div className="flex gap-2 items-center mt-2">
-                   <p className="mt-2 text-sm font-medium text-gray-300">Quantity<span className="text-gray-300"> : </span></p>
-                   <input 
-                     type="number"
-                     className="w-[50px] mt-2 h-8 rounded-md p-2 font-medium bg-[#2b2c30] text-gray-400"
-                     value={cartItem.quantity}
-                     disabled
-                   />
-                 </div>
-
+            
                  <div className="absolute right-0 top-0">
                    <button onClick={()=>removeCartProduct(cartItem.product.id)} type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
-                     <span className="sr-only">Remove</span>
                      <XMarkIcon aria-hidden="true" className="h-5 w-5" />
                    </button>
                  </div>
-               </div>
+                 <div className="flex  items-center gap-2  absolute bottom-0 right-0">
+                      <p className="mt-2 text-sm font-medium text-gray-300 ">Requested Total<span className="text-gray-300"> : </span>
+                      </p>
+                      <p  className="mt-2  text-sm font-medium text-gray-200">
+                        Rs.{cartItem.product.price + cartItem.product.deliveryFee}.00
+                      </p>
+                    </div>
              </div>
            </div>
          </li>
        ))}
      </ul>
+   </div>
    </section>
-
    {/* Order summary */}
    <section aria-labelledby="summary-heading" className="mt-16 bg-[#2b2c30] rounded-lg px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
      <h2 id="summary-heading" className="text-lg font-medium text-gray-200">Order summary</h2>
@@ -282,19 +309,24 @@ const checkoutFunction = async () => {
      <dl className="mt-6 space-y-4">
        <div className="flex items-center justify-between">
          <dt className="text-sm text-gray-600">Subtotal</dt>
-         {/* <dd className="text-sm font-medium text-gray-200">${cart.reduce((acc, item) => acc + item.product.price * item.qty, 0)}</dd> */}
-       </div>
+   
+            <dd className="text-sm font-medium text-gray-200">
+              Rs.{cart.reduce((acc, item) => acc + parseFloat(item.product.price), 0)}.00
+            </dd>
+                </div>
        <div className="flex items-center justify-between border-t border-gray-700 pt-4">
          <dt className="flex items-center text-sm text-gray-600">
            <span>Delivery Cost</span>
          </dt>
-         <dd className="text-sm font-medium text-gray-200">$5.00</dd>
+            <dd className="text-sm font-medium text-gray-200">
+              Rs.{cart.reduce((acc, item) => acc + parseFloat(item.product.deliveryFee), 0)}.00
+            </dd>
        </div>
 
        <div className="flex items-center justify-between border-t border-gray-700 pt-4">
          <dt className="text-base font-medium text-gray-200">Order total</dt>
-         <dd className="text-base font-medium text-gray-200">
-           {/* ${(cart.reduce((acc, item) => acc + item.product.price * item.qty, 0) + 5).toFixed(2)} */}
+         <dd className="text-sm font-medium text-gray-200">
+           Rs.{cart.reduce((acc, item) => acc + parseFloat(item.product.price) + parseFloat(item.product.deliveryFee), 0)}.00
          </dd>
        </div>
      </dl>

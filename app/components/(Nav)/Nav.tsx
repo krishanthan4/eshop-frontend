@@ -141,6 +141,7 @@ export default function Nav() {
   
 
   const [isMounted, setIsMounted] = useState(false);
+  const [searchText, setSearchText] = useState(''); // Lifted state
 
   useEffect(() => {
     setIsMounted(true);
@@ -280,16 +281,22 @@ export default function Nav() {
               <div className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="h-full flex space-x-8">
                   <div className="hidden lg:flex-1 lg:block lg:self-stretch">
-                    <div className="h-full flex space-x-8">
-                    <NavFlyoutMenuComponent title="Weight Training" useStateVariable={flyoutMenuWeightToggle} toggleFunction={flyoutMenuWeightHoverToggleButton} object={nav_flyout_weight}/>
-                    <NavFlyoutMenuComponent title="Calisthenics" useStateVariable={flyoutMenuCalisthenicsToggle} toggleFunction={flyoutMenuCalisthenicsHoverToggleButton} object={nav_flyout_calisthenics}/>
-                    <NavFlyoutMenuComponent title="Skateboarding" useStateVariable={flyoutMenuSkateboardsToggle} toggleFunction={flyoutMenuSkateboardsHoverToggleButton} object={nav_flyout_skateboarding}/>
+                    <div className="h-full flex space-x-8 items-center">
+                      <Link href="search?text=Weight Training" >
+                        Weight Training
+                      </Link>
+                      <Link href="search?text=Calisthenics" >
+                        Calisthenics
+                      </Link>
+                      <Link href="search?text=Skateboarding" >
+                        Skateboarding
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <MainSearchBar />
-              <Link href={"/advancedSearch"} className="bg-gray-500 hover:bg-gray-400 text-black py-1 px-2 rounded-md">Advanced Search</Link>
+              <MainSearchBar searchText={searchText} setSearchText={setSearchText} /> {/* Pass both state and setter */}
+              <Link href={"/advancedSearch"} className="md:block hidden ml-[9rem] mr-[1rem] text-gray-400 hover:bg-gray-400/5 hover:underline py-1 px-2 rounded-md">Filter</Link>
               <div className="ml-auto flex items-center">
                   {/* signed In drop down start */}
 {isLoggedIn ? (

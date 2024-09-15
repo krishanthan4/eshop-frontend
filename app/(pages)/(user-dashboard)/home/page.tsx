@@ -9,12 +9,14 @@ import ProductComponent from "@/app/components/(home)/ProductComponent";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import Pagination, { paginate } from "@/app/components/Pagination";
+import { useCategoryStore } from "@/store/useCategoryStore";
 
 
 export default function page() {
-  const [categories, setCategories] = useState<[]>([]);
+  const [categories, setCategories] = useState<{ catName: string, catImg: string }[]>([]);
   const [products, setProducts] = useState<[]>([]);
-  
+  let [filterSort, setFilterSort] = useState<[]>([]);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -24,14 +26,20 @@ export default function page() {
             "credentials": "include",
           },
         });
-    
+
         if (response.ok) {
           const data = await response.json();
-    
+
           if (data.success) {
-            setCategories(data.categoryList);
-            setProducts(data.productList);
-            // console.log(data.productList[0].productImgs[0].imgPath);
+            // Map categoryList to match CategoryComponent expected format
+            const mappedCategories = data.categoryList.map((category: any) => ({
+              catName: category.categoryName,
+              catImg: category.categoryImg,
+            }));
+            setFilterSort(data.categoryList); 
+            setCategories(mappedCategories); // Set the mapped categories
+            setProducts(data.productList); // Set product list as needed
+            // console.log(data); // Debugging purpose
           } else {
             toast.error("Something Went Wrong");
           }
@@ -43,7 +51,7 @@ export default function page() {
         toast.error("Something Went Wrong");
       }
     };
-    
+
     getData();
   }, []);
   
@@ -66,8 +74,9 @@ export default function page() {
     return (
       <div>
         <div className="flex flex-row justify-evenly">
-          <HomeSortComponent />
-          <CarouselComponent />
+        <HomeSortComponent sortCategoryData={filterSort} />
+        {/* <HomeSortComponent /> */}
+        <CarouselComponent />
         </div>
    <Suspense fallback={<p>Loading Categories ...</p>}>
    <CategoryComponent CategoryObject={categories}/>
