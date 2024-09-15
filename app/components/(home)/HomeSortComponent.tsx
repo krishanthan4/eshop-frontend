@@ -65,7 +65,7 @@ export default function HomeSortComponent({ sortCategoryData }: HomeSortComponen
 
   return (
     <div
-    className="w-[28%] flex items-center mx-2 h-fit py-10 text-gray-300 bg-[#26282bf8] border border-[#1d1e20] shadow-md rounded-md"
+    className="w-[28%] sm:flex hidden  items-center mx-2 h-fit py-10 text-gray-300 bg-[#26282bf8] border border-[#1d1e20] shadow-md rounded-md"
     ref={categoryDivRef}
   >
     <ul className="ms-4 text-gray-600 w-full">

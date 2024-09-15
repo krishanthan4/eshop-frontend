@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 
@@ -10,29 +11,30 @@ export default function UserProfilePage() {
     email: "",
     genders: [],
     userGenderId: null as string | null,
-    addressLine1: null,
-    addressLine2: null,
+    addressLine1: "",
+    addressLine2: "" as string | null,
     userProvinceId: null,
     userDistrictId: null,
-    userPostalCode: null,
+    userPostalCode: null as string | null,
     userCityId: null,
     provinces: [],
     password: "",
     joinedDate: "",
   });
 
-  const [mobile, setMobile] = useState(userDetailsObject.mobile);
-  const [lastName, setLastName] = useState(userDetailsObject.lastName);
-  const [firstName, setFirstName] = useState(userDetailsObject.firstName);
-  const [gender, setGender] = useState(userDetailsObject.userGenderId);
-  const [line1, setLine1] = useState(userDetailsObject.addressLine1);
-  const [line2, setLine2] = useState(userDetailsObject.addressLine2);
-  const [province, setProvince] = useState(userDetailsObject.userProvinceId);
-  const [district, setDistrict] = useState(userDetailsObject.userDistrictId);
-  const [city, setCity] = useState(userDetailsObject.userCityId);
-  const [postalCode, setPostalCode] = useState(userDetailsObject.userPostalCode);
+  const [mobile, setMobile] = useState(userDetailsObject?.mobile ?? "");
+  const [lastName, setLastName] = useState(userDetailsObject?.lastName ?? "");
+  const [firstName, setFirstName] = useState(userDetailsObject?.firstName ?? "");
+  const [gender, setGender] = useState(userDetailsObject?.userGenderId ?? "");
+  const [line1, setLine1] = useState(userDetailsObject?.addressLine1 ?? "");
+  const [line2, setLine2] = useState(userDetailsObject?.addressLine2 ?? "");
+  const [province, setProvince] = useState(userDetailsObject?.userProvinceId ?? "");
+  const [district, setDistrict] = useState(userDetailsObject?.userDistrictId ?? "");
+  const [city, setCity] = useState<string | null>(userDetailsObject?.userCityId ?? null);
+  const [postalCode, setPostalCode] = useState(userDetailsObject?.userPostalCode ?? "");
   let [districts, setDistricts] = useState([]);
   let [cities, setCities] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
@@ -43,12 +45,21 @@ export default function UserProfilePage() {
             credentials: "include",
           },
         });
-
+  
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           if (data.success) {
             setUserDetailsObject(data);
+            setMobile(data.mobile);
+            setLastName(data.lastName);
+            setFirstName(data.firstName);
+            setGender(data.userGenderId);
+            setLine1(data.addressLine1);
+            setLine2(data.addressLine2);
+            setProvince(data.userProvinceId);
+            setDistrict(data.userDistrictId);
+            setCity(data.userCityId);
+            setPostalCode(data.userPostalCode);
           } else {
             toast.error("Something Went Wrong");
           }
@@ -60,9 +71,10 @@ export default function UserProfilePage() {
         toast.error("Something Went Wrong");
       }
     };
-
+  
     getData();
   }, []);
+  
 
   let searchDistricts = async (provinceId: number) => {
     try {
@@ -125,8 +137,6 @@ export default function UserProfilePage() {
     gender: gender,
     line1: line1,
     line2: line2,
-    province: province,
-    district: district,
     city: city,
     postalCode: postalCode,
   }
@@ -150,13 +160,8 @@ export default function UserProfilePage() {
     if (!line1) {
       toast.error("Address Line 1 is required");
       return false;
-    }
-    if (!province || province === "Select") {
-      toast.error("Province is required");
-      return false;
-    }
-    if (!district || district === "Select") {
-      toast.error("District is required");
+    } if (!line2) {
+      toast.error("Address Line 2 is required");
       return false;
     }
     if (!city || city === "Select") {
@@ -224,8 +229,8 @@ export default function UserProfilePage() {
             First name
           </label>
           <input
-            value={userDetailsObject.firstName}
-            onChange={(e) => setUserDetailsObject({ ...userDetailsObject, firstName: e.target.value })}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
             type="text"
             id="fname"
@@ -236,8 +241,8 @@ export default function UserProfilePage() {
             Last name
           </label>
           <input
-            value={userDetailsObject.lastName}
-            onChange={(e) => setUserDetailsObject({ ...userDetailsObject, lastName: e.target.value })}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
             type="text"
             id="lname"
@@ -248,8 +253,8 @@ export default function UserProfilePage() {
             Mobile
           </label>
           <input
-            value={userDetailsObject.mobile}
-            onChange={(e) => setUserDetailsObject({ ...userDetailsObject, mobile: e.target.value })}
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value )}
             className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
             type="number"
             id="mobile"
@@ -273,8 +278,8 @@ export default function UserProfilePage() {
           </label>
           <select
             id="gender"
-            value={userDetailsObject.userGenderId ?? ""}
-            onChange={(e) => setUserDetailsObject({ ...userDetailsObject, userGenderId: e.target.value })}
+            value={gender ?? ""}
+            onChange={(e) => setGender(e.target.value)}
             className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
           >
             <option>Select</option>
@@ -332,7 +337,8 @@ export default function UserProfilePage() {
                           Address Line 1
                         </label>
                         <input
-                          value={userDetailsObject.addressLine1 ?? ""} ref={line1ref}
+                          value={line1 ?? ""} 
+                          onChange={(e)=>{setLine1(e.target.value)}}
                           type="text"
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           id="line1"
@@ -343,7 +349,8 @@ export default function UserProfilePage() {
                           Address Line 2
                         </label>
                         <input
-                          value={userDetailsObject.addressLine2 ?? ""} ref={line2ref}
+                          value={line2 ?? ""} 
+                          onChange={(e)=>{setLine2(e.target.value)}}
                           type="text"
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           id="line2"
@@ -357,7 +364,7 @@ export default function UserProfilePage() {
                           id="province"
                           onChange={(e) =>
                             searchDistricts(Number(e.target.value)) 
-                          } ref={provinceRef}
+                          } 
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                         >
                           <option value="">Select</option>
@@ -385,7 +392,7 @@ export default function UserProfilePage() {
                           District
                         </label>
                         <select
-                          id="district" ref={districtRef}
+                          id="district"
                           onChange={(e) => searchCities(Number(e.target.value))}
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                         >
@@ -414,7 +421,7 @@ export default function UserProfilePage() {
                           City
                         </label>
                         <select
-                          id="city" ref={cityRef}
+                          id="city" onChange={(e) => setCity(e.target.value)}
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                         >
                           <option value="">Select</option>
@@ -438,8 +445,8 @@ export default function UserProfilePage() {
                           ZIP / Postal code
                         </label>
                         <input
-                          value={userDetailsObject.userPostalCode ?? ""}
-                          type="text" ref={postalCoderef}
+                          value={postalCode ?? ""}
+                          type="text" onChange={(e)=>{setPostalCode(e.target.value)}}
                           className="bg-[#2e3035] text-gray-400 border-none mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           id="pcode"
                         />
@@ -452,6 +459,12 @@ export default function UserProfilePage() {
                       onClick={() => updateProfile()}
                     >
                       Save
+                    </button>
+                    <button
+                      className="py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:font-bold"
+                      onClick={() => window.location.reload()}
+                    >
+                      Refresh
                     </button>
                   </div>
                 </div>
