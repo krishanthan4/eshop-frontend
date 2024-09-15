@@ -158,7 +158,7 @@ export default function Page({ params }: Props) {
         if (data.success) {
           toast.success(data.content);
         } else {
-          toast.error("Something Went Wrong");
+          toast.error(data.content);
         }
       } else {
         console.error("HTTP error:", response.status);

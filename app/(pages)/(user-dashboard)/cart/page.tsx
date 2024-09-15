@@ -90,12 +90,14 @@ async function removeCartProduct(productId: number){
       
         if(data.content=="Cart item not found."){
           setNoCart(false);
+          window.location.reload();
         }else{
-          setCart((prevItems) => {
-            const updatedItems = prevItems.filter((item) => item.product.id !== productId);
-            setNoCart(updatedItems.length === 0);
-            return updatedItems;
-          });
+          // setCart((prevItems) => {
+          //   const updatedItems = prevItems.filter((item) => item.product.id !== productId);
+          //   setNoCart(updatedItems.length === 0);
+          //   return updatedItems;
+          // });
+          window.location.reload();
         }
       } else {
         toast.error("Something Went Wrong");
@@ -220,7 +222,7 @@ const checkoutFunction = async () => {
 };
 
   return (
-    <div className="">
+    <div className=""> 
     <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">Shopping Cart</h1>
    
@@ -267,7 +269,7 @@ const checkoutFunction = async () => {
                         </div>
                         <div className="flex gap-2 items-center mt-2">
                           <p className="mt-2 text-sm font-medium text-gray-300 ">Quanity<span className="text-gray-300"> : </span></p>
-                          <input min="1" max=" $product_dataqty " type="number"
+                          <input
                             className="product_qty w-[50px] mt-2 h-8 rounded-md p-2 font-medium bg-[#2b2c30] text-gray-400"
                             value={cartItem.qty} 
                            disabled
@@ -284,9 +286,9 @@ const checkoutFunction = async () => {
 
             
                  <div className="absolute right-0 top-0">
-                   <button onClick={()=>removeCartProduct(cartItem.product.id)} type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                  {isLoggedIn ?  <button onClick={()=>removeCartProduct(cartItem.product.id)} type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
                      <XMarkIcon aria-hidden="true" className="h-5 w-5" />
-                   </button>
+                   </button> : null}
                  </div>
                  <div className="flex  items-center gap-2  absolute bottom-0 right-0">
                       <p className="mt-2 text-sm font-medium text-gray-300 ">Requested Total<span className="text-gray-300"> : </span>
