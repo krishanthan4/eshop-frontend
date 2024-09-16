@@ -157,7 +157,7 @@ export default function Page({ params }: Props) {
 
         if (data.success) {
           toast.success(data.content);
-          window.location.reload();
+          // window.location.reload();
         } else {
           toast.error(data.content);
         }

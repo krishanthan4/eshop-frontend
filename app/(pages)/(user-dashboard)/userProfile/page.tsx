@@ -61,7 +61,7 @@ export default function UserProfilePage() {
             setCity(data.userCityId);
             setPostalCode(data.userPostalCode);
           } else {
-            toast.error("Something Went Wrong");
+            toast.error(data.content);
           }
         } else {
           console.error("HTTP error:", response.status);

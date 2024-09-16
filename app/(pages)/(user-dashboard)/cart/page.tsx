@@ -296,7 +296,7 @@ const checkoutFunction = async () => {
                       <p className="mt-2 text-sm font-medium text-gray-300 ">Requested Total<span className="text-gray-300"> : </span>
                       </p>
                       <p  className="mt-2  text-sm font-medium text-gray-200">
-                        Rs.{cartItem.product.price + cartItem.product.deliveryFee}.00
+                        Rs.{(Number(cartItem.quantity ?? 0) * Number(cartItem.product.price) + Number(cartItem.product.deliveryFee)).toFixed(2)}
                       </p>
                     </div>
              </div>
@@ -330,7 +330,7 @@ const checkoutFunction = async () => {
        <div className="flex items-center justify-between border-t border-gray-700 pt-4">
          <dt className="text-base font-medium text-gray-200">Order total</dt>
          <dd className="text-sm font-medium text-gray-200">
-           Rs.{cart.reduce((acc, item) => acc + parseFloat(item.product.price) + parseFloat(item.product.deliveryFee), 0)}.00
+           Rs.{cart.reduce((acc, item) => acc + parseFloat(item.product.price) * parseFloat(item.quantity?.toString() || '0') + parseFloat(item.product.deliveryFee), 0)}.00
          </dd>
        </div>
      </dl>

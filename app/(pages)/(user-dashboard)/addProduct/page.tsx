@@ -96,7 +96,7 @@ const [images, setImages] = useState<(File | string)[]>([
     getData();
   }, []);
   const AddProducts = async () => {
-   
+    console.log(images.length);
   if (
     selectedColor === "" ||
     selectedModel === "" ||
@@ -106,7 +106,8 @@ const [images, setImages] = useState<(File | string)[]>([
     price === "" ||
     quantity === "" ||
     parseFloat(price) < 0 ||
-    parseInt(quantity) < 0 
+    parseInt(quantity) < 0 ||
+    images.includes("https://static.thenounproject.com/png/3407390-200.png")
   ) {
     toast.error("Please fill all the fields and ensure exactly 3 images are uploaded.");
     return;

@@ -192,49 +192,55 @@ export default function Page() {
                       </div>
                     ))}
                   </div>
-                  {/* color filter */}
-                  <div className="mt-6">
-                    <p>Colors</p>
-                    <div className="grid grid-cols-4">
-                      {color.map((e) => (
-                        <div
-                          key={e.clrId}
-                          className="my-2 mx-1 flex items-center"
-                        >
-                          <input
-                            type="radio"
-                            value={e.clrName}
-                            onChange={(e) => setFilterColor(e.target.value)} // Set selected sort
-                            id={`color-${e.clrId}`}
-                            name="colorFilterSet"
-                            className="hidden"
-                          />
-                          <label
-                            htmlFor={`color-${e.clrId}`}
-                            className={`flex items-center justify-center h-6 w-6 rounded-full cursor-pointer `}
-                            style={{ backgroundColor: e.clrName }}
-                          >
-                            <input
-                              type="radio"
-                              value={e.clrId}
-                              onChange={(e) => setFilterColor(e.target.value)} // Set selected sort
-                              id={`color-${e.clrId}`}
-                              name="colorFilterSet"
-                              className="hidden"
-                            />
-                            <div
-                              className={`w-4 h-4 rounded-full ${
-                                Number(selectedSort) === e.clrId
-                                  ? `border-2 border-${e.clrName}-800`
-                                  : ""
-                              }`}
-                              style={{ backgroundColor: e.clrName }}
-                            />
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+            {/* color filter */}
+<div className="mt-6">
+  <p>Colors</p>
+  <div className="grid grid-cols-4">
+    {color.map((e) => (
+      <div
+        key={e.clrId}
+        className="my-2 mx-1 flex items-center"
+      >
+        {/* Hidden radio input */}
+        <input
+          type="radio"
+          value={e.clrName}
+          onChange={(event) => setFilterColor(event.target.value)} // Set selected sort
+          id={`color-${e.clrId}`}
+          name="colorFilterSet"
+          className="hidden"
+        />
+
+        {/* Label for the color selection */}
+        <label
+          htmlFor={`color-${e.clrId}`}
+          className={`flex items-center justify-center h-6 w-6 rounded-full cursor-pointer`}
+          style={{ backgroundColor: e.clrName }}
+        >
+          {/* Hidden radio input */}
+          <input
+            type="radio"
+            value={e.clrId}
+            onChange={(event) => setFilterColor(event.target.value)} // Set selected sort
+            id={`color-${e.clrId}`}
+            name="colorFilterSet"
+            className="hidden"
+          />
+
+          {/* Color indicator */}
+          <div
+            className={`w-4 h-4 rounded-full`}
+            style={{
+              backgroundColor: e.clrName,
+              filter: Number(selectedSort) === e.clrId ? "brightness(70%)" : "none" // Darken the selected color
+            }}
+          />
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
+
 
                   {/* price filter */}
                   <div className="mt-5">
