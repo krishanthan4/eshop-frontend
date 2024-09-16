@@ -134,7 +134,8 @@ function startPayment({ payhereList }: any) {
   
         if (data.success) {
           // Start the payment process if checkout is successful
-          setCart([]);
+          // setCart([]);
+          setNoCart(false);
           toast.success(data.content);
         } else {
           toast.error(data.content);
@@ -179,6 +180,7 @@ function startPayment({ payhereList }: any) {
     email: payhereList.email,
     phone: payhereList.phone,
     address: payhereList.address,
+    postal_code: payhereList.postal_code,
     city: payhereList.city,
     country: payhereList.country,
     delivery_address: '',     // Add dynamic value if required
@@ -202,7 +204,7 @@ const checkoutFunction = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       if (data.success) {
         // Start the payment process if checkout is successful
@@ -271,7 +273,7 @@ const checkoutFunction = async () => {
                           <p className="mt-2 text-sm font-medium text-gray-300 ">Quanity<span className="text-gray-300"> : </span></p>
                           <input
                             className="product_qty w-[50px] mt-2 h-8 rounded-md p-2 font-medium bg-[#2b2c30] text-gray-400"
-                            value={cartItem.qty} 
+                            value={cartItem.quantity} 
                            disabled
                             id=" $cart_datacart_id qtyNum"/>
                         </div>

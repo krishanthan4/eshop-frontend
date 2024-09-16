@@ -96,6 +96,21 @@ const [images, setImages] = useState<(File | string)[]>([
     getData();
   }, []);
   const AddProducts = async () => {
+   
+  if (
+    selectedColor === "" ||
+    selectedModel === "" ||
+    selectedCondition === "" ||
+    title === "" ||
+    description === "" ||
+    price === "" ||
+    quantity === "" ||
+    parseFloat(price) < 0 ||
+    parseInt(quantity) < 0 
+  ) {
+    toast.error("Please fill all the fields and ensure exactly 3 images are uploaded.");
+    return;
+  } else {
     const form = new FormData();
     form.append('modelId', selectedModel);
     form.append('title', title);
@@ -104,21 +119,21 @@ const [images, setImages] = useState<(File | string)[]>([
     form.append('conditionId', selectedCondition);
     form.append('price', price);
     form.append('quantity', quantity);
-  
+
     images.forEach((image, index) => {
       if (image instanceof File) {
         form.append(`image${index + 1}`, image);
       }
     });
-  
+
     try {
       const response = await fetch('/api/AddProduct', {
         method: 'POST',
         body: form,
       });
-  
+
       const data = await response.json(); // Ensure you parse the response
-  
+
       if (response.ok) {
         // Handle success case
         if (data.success) {
@@ -140,7 +155,7 @@ const [images, setImages] = useState<(File | string)[]>([
 
           resetForm();
         } else {
-          toast.error("An issue occurred, but no specific message was provided.");
+          toast.error(data.content);
         }
       } else {
         // Handle error case when response is not ok
@@ -150,6 +165,8 @@ const [images, setImages] = useState<(File | string)[]>([
       console.error('Error:', error);
       toast.error('An error occurred while adding the product.');
     }
+  }
+   
   };
   
   return isLoggedIn ? (

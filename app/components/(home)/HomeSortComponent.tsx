@@ -151,7 +151,7 @@ export default function HomeSortComponent({ sortCategoryData }: HomeSortComponen
   
     {/* Sub menu for products */}
     {activeModel && (
-      <ul className="mx-2 ms-[38%] absolute z-40 bg-[#26282bee] text-gray-400 border border-[#1d1e20] shadow-md rounded-md">
+      <ul className="mx-2 min-h-20 ms-[38%] absolute z-40 bg-[#26282bee] text-gray-400 border border-[#1d1e20] shadow-md rounded-md">
         {sortCategoryData
           ?.find((category) => category.categoryId === activeCategory)
           ?.models.find((model) => model.modelId === activeModel)
